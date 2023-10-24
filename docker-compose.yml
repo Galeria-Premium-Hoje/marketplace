@@ -1,0 +1,57 @@
+version: "3"
+services:
+  gph-db:
+    container_name: gphDatabase
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    ports:
+      -  "${POSTGRES_PORT:-5450}:5432"
+    volumes:
+      - ./backends/database/:/docker-entrypoint-initdb.d
+    restart: always
+  # gph-cronjob:
+  #   container_name: gphCronjob
+  #   image: gph-cronjob
+  #   build: ./backends/cronjob
+  #   environment:
+  #     - POSTGRES_HOST=${POSTGRES_HOST}
+  #     - POSTGRES_USER=${POSTGRES_USER}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  #     - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+  #     - POSTGRES_PORT=${POSTGRES_PORT}
+  #   restart: always
+  backend-monolith:
+    container_name: gphBackendMonolith
+    image: gph-backend-monolith    
+    build: ./backends/monolith
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_USER={$POSTGRES_USER}
+      - POSTGRES_PASSWORD={$POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_PORT={$POSTGRES_PORT}
+    volumes:
+      - ./backends/monolith:/app-backend
+    restart: always
+  gph-frontend-web:
+    container_name: gphFrontendWeb
+    image: gph-frontend-web
+    build: ./frontends/web
+    volumes:
+      - ./frontends/web:/app-frontend
+    ports:
+      - 3404:3404
+    depends_on:
+      - backend-monolith
+    restart: always
+  gph-nginx-monolith:
+    depends_on:
+        - backend-monolith
+    container_name: gphNginxMonolith
+    image: gph-nginx-monolith
+    build: ./backends/nginx_monolith
+    ports:
+        - 8404:8404
+    restart: always
