@@ -42,7 +42,7 @@ services:
     volumes:
       - ./frontends/web:/app-frontend
     ports:
-      - 3404:3404
+      - 3404:3404      
     depends_on:
       - backend-monolith
     restart: always
