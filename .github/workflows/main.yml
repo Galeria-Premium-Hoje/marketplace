@@ -1,4 +1,4 @@
-name: CI-CD
+name: CI-CD GPH Production Pipeline
 
 on:
   push:
@@ -12,12 +12,12 @@ jobs:
       - uses: actions/checkout@v4.1.1
       - name: Build and push Docker image
         uses: docker/build-push-action@v5.0.0
-        with: |
-        context: ./frontends/web
-        file: Dockerfile
-        push: true
-        tags: | 
-          gph/marketplace:v1
-          gph/marketplace:latest
+        with: 
+          context: ./frontends/web
+          file: Dockerfile
+          push: true
+          tags: | 
+            gph/marketplace:v1
+            gph/marketplace:latest
 
 
