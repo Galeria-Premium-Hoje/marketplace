@@ -24,7 +24,7 @@ jobs:
           file: ./frontends/web/Dockerfile
           push: true
           tags: | 
-            ldamasio/gph-marketplace:v1
+            ldamasio/gph-marketplace:${{github.run_number}}
             ldamasio/gph-marketplace:latest
 
 
