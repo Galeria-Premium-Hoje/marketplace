@@ -1,0 +1,25 @@
+name: CI-CD
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5.0.0
+        with: 
+        context: ./frontends/web
+        file: Dockerfile
+        push: true
+        tags: | 
+          gph/marketplace:v1
+          gph/marketplace:latest
+          
+        
+      
+  CD:
