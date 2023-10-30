@@ -26,6 +26,16 @@ jobs:
           tags: | 
             ldamasio/gph-marketplace:${{github.run_number}}
             ldamasio/gph-marketplace:latest
+  CD:
+    runs-on: ubuntu-latest
 
+    steps:
+      - uses: actions/checkout@v4.1.1
 
+      - name: Define context
+        uses: Azure/k8s-set-context@v3.0
+        with: 
+          method: kubeconfig
+          kubeconfig: ${{secrets.K8S_CONFIG}}
+          
 
