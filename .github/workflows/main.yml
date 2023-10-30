@@ -14,7 +14,7 @@ jobs:
         uses: docker/build-push-action@v5.0.0
         with: 
           context: ./frontends/web
-          file: Dockerfile
+          file: ./frontends/web/Dockerfile
           push: true
           tags: | 
             gph/marketplace:v1
