@@ -24,18 +24,18 @@ jobs:
           file: ./frontends/web/docker/Dockerfile
           push: true
           tags: | 
-            ldamasio/gph-frontend:${{github.run_number}}
+            ldamasio/gph-frontend:1.0.${{github.run_number}}
             ldamasio/gph-frontend:latest
 
-      # - name: Build and push Docker monolith backend image
-      #   uses: docker/build-push-action@v5.0.0
-      #   with: 
-      #     context: ./backends/monolith
-      #     file: ./backends/monolith/docker/Dockerfile
-      #     push: true
-      #     tags: | 
-      #       ldamasio/gph-backend-monolith:${{github.run_number}}
-      #       ldamasio/gph-backend-monolith:latest
+      - name: Build and push Docker monolith backend image
+        uses: docker/build-push-action@v5.0.0
+        with: 
+          context: ./backends/monolith
+          file: ./backends/monolith/docker/Dockerfile
+          push: true
+          tags: | 
+            ldamasio/gph-backend-monolith:1.0.${{github.run_number}}
+            ldamasio/gph-backend-monolith:latest
 
   # CD:
   #   runs-on: ubuntu-latest
