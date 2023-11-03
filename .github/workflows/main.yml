@@ -17,30 +17,41 @@ jobs:
           username: ${{secrets.DOCKERHUB_USER}}
           password: ${{secrets.DOCKERHUB_PWD}}
       
-      - name: Build and push Docker image
+      - name: Build and push Docker frontend image
         uses: docker/build-push-action@v5.0.0
         with: 
           context: ./frontends/web
-          file: ./frontends/web/Dockerfile
+          file: ./docker/Dockerfile
           push: true
           tags: | 
-            ldamasio/gph-marketplace:${{github.run_number}}
-            ldamasio/gph-marketplace:latest
-  CD:
-    runs-on: ubuntu-latest
-    needs: [CI]
-    steps:
-      - uses: actions/checkout@v4.1.1
+            ldamasio/gph-frontend:${{github.run_number}}
+            ldamasio/gph-frontend:latest
 
-      - name: Define context
-        uses: Azure/k8s-set-context@v3.0
+      - name: Build and push Docker monolith backend image
+        uses: docker/build-push-action@v5.0.0
         with: 
-          method: kubeconfig
-          kubeconfig: ${{secrets.K8S_CONFIG}}
-      - name: Deploy to Kubernetes cluster
-        uses: Azure/k8s-deploy@v4.9
-        with:
-          images: ldamasio/gph-marketplace:${{github.run_number}}
-          manifests:
-            k8s/deployment.yaml
+          context: ./backends/monolith
+          file: ./docker/Dockerfile
+          push: true
+          tags: | 
+            ldamasio/gph-backend-monolith:${{github.run_number}}
+            ldamasio/gph-backend-monolith:latest
+
+  # CD:
+  #   runs-on: ubuntu-latest
+  #   needs: [CI]
+  #   steps:
+  #     - uses: actions/checkout@v4.1.1
+
+  #     - name: Define context
+  #       uses: Azure/k8s-set-context@v3.0
+  #       with: 
+  #         method: kubeconfig
+  #         kubeconfig: ${{secrets.K8S_CONFIG}}
+  #     - name: Deploy to Kubernetes cluster
+  #       uses: Azure/k8s-deploy@v4.9
+  #       with:
+  #         images: ldamasio/gph-marketplace:${{github.run_number}}
+  #         manifests:
+  #           k8s/deployment.yaml
 

@@ -24,7 +24,9 @@ services:
   backend-monolith:
     container_name: gphBackendMonolith
     image: gph-backend-monolith    
-    build: ./backends/monolith
+    build: 
+      context: ./backends/monolith
+      dockerfile: ./docker/Dockerfile
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings
       - POSTGRES_HOST=${POSTGRES_HOST}
@@ -32,15 +34,17 @@ services:
       - POSTGRES_PASSWORD={$POSTGRES_PASSWORD}
       - POSTGRES_DATABASE=${POSTGRES_DATABASE}
       - POSTGRES_PORT={$POSTGRES_PORT}
-    volumes:
-      - ./backends/monolith:/app-backend
+    # volumes:
+    #   - ./backends/monolith:/app-backend
     restart: always
   gph-frontend-web:
     container_name: gphFrontendWeb
     image: gph-frontend-web
-    build: ./frontends/web
-    volumes:
-      - ./frontends/web:/app-frontend
+    build: 
+      context: ./frontends/web
+      dockerfile: ./docker/Dockerfile
+    # volumes:
+    #   - ./frontends/web:/app-frontend
     ports:
       - 3404:3404      
     depends_on:
